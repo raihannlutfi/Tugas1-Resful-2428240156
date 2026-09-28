@@ -52,6 +52,90 @@ app.get('/parking-records', (req, res) => {
   res.json(parkingRecords);
 });
 
+// GET /parking-records
+// Menampilkan seluruh data atau filter berdasarkan jenis kendaraan
+app.get('/parking-records', (req, res) => {
+  const { jenisKendaraan } = req.query;
+
+  if (jenisKendaraan) {
+    const hasil = parkingRecords.filter(
+      (parking) => parking.jenisKendaraan === jenisKendaraan
+    );
+
+    return res.json(hasil);
+  }
+
+  res.json(parkingRecords);
+});
+
+// GET /parking-records/:id
+// Menampilkan satu data parkir berdasarkan id
+app.get('/parking-records/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const data = parkingRecords.find((parking) => parking.id === id);
+
+  if (!data) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Data parkir tidak ditemukan',
+      data: null
+    });
+  }
+
+  res.json(data);
+});
+
+// GET /parking-records
+// Menampilkan seluruh data atau filter berdasarkan jenis kendaraan
+app.get('/parking-records', (req, res) => {
+  const { jenisKendaraan } = req.query;
+
+  if (jenisKendaraan) {
+    const hasil = parkingRecords.filter(
+      (parking) => parking.jenisKendaraan === jenisKendaraan
+    );
+
+    return res.json(hasil);
+  }
+
+  res.json(parkingRecords);
+});
+
+// GET /parking-records/:id
+// Menampilkan satu data parkir berdasarkan id
+app.get('/parking-records/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const data = parkingRecords.find((parking) => parking.id === id);
+
+  if (!data) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Data parkir tidak ditemukan',
+      data: null
+    });
+  }
+
+  res.json(data);
+});
+
+app.get('/parking-records/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const data = parkingRecords.find((parking) => parking.id === id);
+
+  if (!data) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Data parkir tidak ditemukan',
+      data: null
+    });
+  }
+
+  res.json(data);
+});
+
 // Menjalankan server
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
