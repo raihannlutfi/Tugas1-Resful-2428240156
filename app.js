@@ -183,6 +183,68 @@ app.post('/parking-records', (req, res) => {
   });
 });
 
+// PUT /parking-records/:id
+// Mengubah data parkir berdasarkan id
+app.put('/parking-records/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const index = parkingRecords.findIndex(
+    (parking) => parking.id === id
+  );
+
+  // Cek apakah data ditemukan
+  if (index === -1) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Data parkir tidak ditemukan',
+      data: null
+    });
+  }
+
+  const {
+    platNomor,
+    jenisKendaraan,
+    waktuMasuk,
+    waktuKeluar,
+    biaya
+  } = req.body;
+
+  // Validasi data wajib
+  if (!platNomor || !jenisKendaraan || !waktuMasuk) {
+    return res.status(400).json({
+      status: 400,
+      message: 'platNomor, jenisKendaraan, dan waktuMasuk wajib diisi',
+      data: null
+    });
+  }
+
+  // Validasi jenis kendaraan
+  if (jenisKendaraan !== 'motor' && jenisKendaraan !== 'mobil') {
+    return res.status(400).json({
+      status: 400,
+      message: 'jenisKendaraan harus motor atau mobil',
+      data: null
+    });
+  }
+
+  // Mengganti data lama dengan data baru
+  parkingRecords[index] = {
+    id: id,
+    platNomor,
+    jenisKendaraan,
+    waktuMasuk,
+    waktuKeluar: waktuKeluar ?? null,
+    biaya: biaya ?? 0
+  };
+
+  res.status(200).json({
+    status: 200,
+    message: 'Data parkir berhasil diubah',
+    data: parkingRecords[index]
+  });
+});
+
+
 // Menjalankan server
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
