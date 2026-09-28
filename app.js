@@ -40,7 +40,7 @@ let nextId = 4;
 app.get('/', (req, res) => {
   res.json({
     nama: 'M. Raihan Al Lutfi',
-    npm: 'ISI_NPM_KAMU',
+    npm: '0895329239603',
     topik: 'Area Parkir',
     endpoint: '/parking-records'
   });
@@ -52,39 +52,6 @@ app.get('/parking-records', (req, res) => {
   res.json(parkingRecords);
 });
 
-// GET /parking-records
-// Menampilkan seluruh data atau filter berdasarkan jenis kendaraan
-app.get('/parking-records', (req, res) => {
-  const { jenisKendaraan } = req.query;
-
-  if (jenisKendaraan) {
-    const hasil = parkingRecords.filter(
-      (parking) => parking.jenisKendaraan === jenisKendaraan
-    );
-
-    return res.json(hasil);
-  }
-
-  res.json(parkingRecords);
-});
-
-// GET /parking-records/:id
-// Menampilkan satu data parkir berdasarkan id
-app.get('/parking-records/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-
-  const data = parkingRecords.find((parking) => parking.id === id);
-
-  if (!data) {
-    return res.status(404).json({
-      status: 404,
-      message: 'Data parkir tidak ditemukan',
-      data: null
-    });
-  }
-
-  res.json(data);
-});
 
 // GET /parking-records
 // Menampilkan seluruh data atau filter berdasarkan jenis kendaraan
@@ -244,6 +211,31 @@ app.put('/parking-records/:id', (req, res) => {
   });
 });
 
+// DELETE /parking-records/:id
+// Menghapus data parkir berdasarkan id
+app.delete('/parking-records/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const index = parkingRecords.findIndex(
+    (parking) => parking.id === id
+  );
+
+  if (index === -1) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Data parkir tidak ditemukan',
+      data: null
+    });
+  }
+
+  parkingRecords.splice(index, 1);
+
+  res.status(200).json({
+    status: 200,
+    message: `Data parkir dengan id ${id} berhasil dihapus`,
+    data: null
+  });
+});
 
 // Menjalankan server
 app.listen(PORT, () => {
