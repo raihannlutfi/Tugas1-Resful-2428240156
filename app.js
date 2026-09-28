@@ -136,6 +136,53 @@ app.get('/parking-records/:id', (req, res) => {
   res.json(data);
 });
 
+// POST /parking-records
+// Menambahkan data parkir baru
+app.post('/parking-records', (req, res) => {
+  const {
+    platNomor,
+    jenisKendaraan,
+    waktuMasuk,
+    waktuKeluar,
+    biaya
+  } = req.body;
+
+  // Validasi data wajib
+  if (!platNomor || !jenisKendaraan || !waktuMasuk) {
+    return res.status(400).json({
+      status: 400,
+      message: 'platNomor, jenisKendaraan, dan waktuMasuk wajib diisi',
+      data: null
+    });
+  }
+
+  // Validasi jenis kendaraan
+  if (jenisKendaraan !== 'motor' && jenisKendaraan !== 'mobil') {
+    return res.status(400).json({
+      status: 400,
+      message: 'jenisKendaraan harus motor atau mobil',
+      data: null
+    });
+  }
+
+  const baru = {
+    id: nextId++,
+    platNomor,
+    jenisKendaraan,
+    waktuMasuk,
+    waktuKeluar: waktuKeluar ?? null,
+    biaya: biaya ?? 0
+  };
+
+  parkingRecords.push(baru);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Data parkir berhasil ditambahkan',
+    data: baru
+  });
+});
+
 // Menjalankan server
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
